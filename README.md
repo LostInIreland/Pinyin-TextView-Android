@@ -10,7 +10,7 @@ compile "???"
 ```
 
 2. Declare it in your XML:
-```
+```xml
 <com.blackjade.pinyintextview.PinyinTextView
         android:id="@+id/pinyin"
         android:layout_width="wrap_content"
