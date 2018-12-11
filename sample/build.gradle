@@ -21,12 +21,17 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url  "https://dl.bintray.com/lostinireland/Pinyin-TextView"
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
-    implementation project(":pinyintextview")
-
+    implementation 'com.blackjade.pinyintextview:pinyintextview:1.0.0'
 }
