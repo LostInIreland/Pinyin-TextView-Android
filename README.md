@@ -4,9 +4,15 @@ An Android custom Textviewr that can display chinese pinyin with tone above.
 
 ![Screenshot](sample.png)
 
-1. Add the dependency
+1. Include the repository and add the dependency
 ```
-compile 'com.blackjade.pinyintextview:pinyintextview:1.0.0'
+repositories {
+    maven {
+        url  "https://dl.bintray.com/lostinireland/Pinyin-TextView"
+    }
+}
+
+implementation 'com.blackjade.pinyintextview:pinyintextview:1.0.0'
 ```
 
 2. Declare it in your XML:
