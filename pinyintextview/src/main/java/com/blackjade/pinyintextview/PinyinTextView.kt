@@ -7,15 +7,15 @@ import android.widget.TextView
 
 class PinyinTextView(context: Context, attrs: AttributeSet) : TextView(context, attrs) {
     private var pinyin = ""
+    private var letter = ""
 
     override fun onDraw(canvas: Canvas) {
         if (text != null && text.matches(Regex("^.*\\d"))) {
             pinyin = text.toString()
-            val letter = pinyin.substring(0, pinyin.length - 1)
-            text = letter.replace('v', 'ü')
+            pinyin = pinyin.replace('v', 'ü')
+            letter = pinyin.substring(0, pinyin.length - 1)
+            text = letter
         }
-
-        super.onDraw(canvas)
 
         if (pinyin.length > 1) {
             val x = 0f
@@ -25,9 +25,16 @@ class PinyinTextView(context: Context, attrs: AttributeSet) : TextView(context, 
             val tone = getTone(toneNumber)
             val stateIndex = getStateIndex(pinyin)
             if (stateIndex != -1) {
-                if (pinyin[stateIndex] == 'ü'
-                    || pinyin[stateIndex] == 'v') {
+
+                // If tone is above 'ü', move tone up a bit
+                if (pinyin[stateIndex] == 'ü') {
                     y -= resources.displayMetrics.density * 4
+                }
+
+                // If tone is above 'i', replace 'i' by 'ı'
+                if (pinyin[stateIndex] == 'i') {
+                    letter = letter.replace('i', 'ı')
+                    text = letter
                 }
                 canvas.drawText(
                     tone,
@@ -38,6 +45,7 @@ class PinyinTextView(context: Context, attrs: AttributeSet) : TextView(context, 
                 )
             }
         }
+        super.onDraw(canvas)
     }
 
     private fun getTone(toneNumber : Char) : String =
@@ -58,7 +66,6 @@ class PinyinTextView(context: Context, attrs: AttributeSet) : TextView(context, 
                 || text[toneIndex] == 'i'
                 || text[toneIndex] == 'o'
                 || text[toneIndex] == 'u'
-                || text[toneIndex] == 'v'
                 || text[toneIndex] == 'ü') {
                 if (stateIndex == -1 || text[toneIndex] < text[stateIndex]) {
                     stateIndex = toneIndex
