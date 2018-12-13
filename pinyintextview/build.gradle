@@ -26,7 +26,7 @@ ext {
     siteUrl = 'https://github.com/LostInIreland/Pinyin-TextView-Android'
     gitUrl = 'https://github.com/LostInIreland/Pinyin-TextView-Android.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.1.0'
 
     developerId = 'Lost'
     developerName = 'LostInIreland'

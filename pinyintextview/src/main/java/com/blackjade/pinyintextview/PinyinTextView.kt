@@ -6,44 +6,50 @@ import android.util.AttributeSet
 import android.widget.TextView
 
 class PinyinTextView(context: Context, attrs: AttributeSet) : TextView(context, attrs) {
-    private var pinyin = ""
-    private var letter = ""
+    private var pinyins = emptyList<String>()
+    private var letters = mutableListOf<String>()
 
     override fun onDraw(canvas: Canvas) {
         if (text != null && text.matches(Regex("^.*\\d"))) {
-            pinyin = text.toString()
-            pinyin = pinyin.replace('v', 'ü')
-            letter = pinyin.substring(0, pinyin.length - 1)
-            text = letter
+            pinyins = text.replace(Regex("v"), "u").split(Regex("(?<=\\d)"))
+            letters = text.replace(Regex("v"), "u").split(Regex("\\d")).toMutableList()
         }
 
-        if (pinyin.length > 1) {
-            val x = 0f
-            var y = paint.fontMetrics.leading - paint.fontMetrics.top
+        var x = 0f
+        for (i in pinyins.indices) {
+            var pinyin = pinyins[i]
+            if (pinyin.isNotEmpty()) {
+                var y = paint.fontMetrics.leading - paint.fontMetrics.top
 
-            val toneNumber = pinyin[pinyin.length - 1]
-            val tone = getTone(toneNumber)
-            val stateIndex = getStateIndex(pinyin)
-            if (stateIndex != -1) {
+                val toneNumber = pinyin[pinyin.length - 1]
+                val tone = getTone(toneNumber)
+                val stateIndex = getStateIndex(pinyin)
+                if (stateIndex != -1) {
 
-                // If tone is above 'ü', move tone up a bit
-                if (pinyin[stateIndex] == 'ü') {
-                    y -= resources.displayMetrics.density * 4
+                    // If tone is above 'ü', move tone up a bit
+                    if (pinyin[stateIndex] == 'ü') {
+                        y -= resources.displayMetrics.density * 4
+                    }
+
+                    // If tone is above 'i', replace 'i' by 'ı'
+                    if (pinyin[stateIndex] == 'i') {
+                        letters[i] = letters[i].replace('i', 'ı')
+                    }
+                    canvas.drawText(
+                        tone,
+                        x + paint.measureText(pinyin.substring(0, stateIndex))
+                                + (paint.measureText(pinyin[stateIndex].toString()) - paint.measureText(tone)) / 2,
+                        y,
+                        paint
+                    )
                 }
-
-                // If tone is above 'i', replace 'i' by 'ı'
-                if (pinyin[stateIndex] == 'i') {
-                    letter = letter.replace('i', 'ı')
-                    text = letter
-                }
-                canvas.drawText(
-                    tone,
-                    x + paint.measureText(pinyin.substring(0, stateIndex))
-                            + (paint.measureText(pinyin[stateIndex].toString()) - paint.measureText(tone)) / 2,
-                    y,
-                    paint
-                )
+                val letter = pinyin.substring(0, pinyin.length - 1) + " "
+                x += paint.measureText(letter)
             }
+        }
+
+        if (text != null && text.matches(Regex("^.*\\d"))) {
+            text = letters.joinToString(" ")
         }
         super.onDraw(canvas)
     }
