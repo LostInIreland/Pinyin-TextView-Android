@@ -1,5 +1,5 @@
 # PinyinTextView
-An Android custom Textviewr that can display chinese pinyin with tone above.
+An Android custom Textview that can display chinese pinyin with tone above.
 
 
 ![Screenshot](sample.png)
